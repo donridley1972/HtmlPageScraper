@@ -1,12 +1,12 @@
 # HtmlPageScraper
 "Scrapes" files from websites.
 
-# For Windows
+## For Windows
 
-# Clarion 11.0.13505
+## Clarion 11.0.13505
 
 
-# 3rd Party
+## 3rd Party
 
 
 Capesoft 
@@ -34,7 +34,7 @@ StringTheory 3.69
 
 WinEvent 5.41
 
-# Screenshots
+## Screenshots
 
 <img src="https://github.com/donridley1972/HtmlPageScraper/blob/main/Screenshots/Main1.png" width=800/>
 
