@@ -1,12 +1,12 @@
 # HtmlPageScraper
 "Scrapes" files from websites.
 
-For Windows
+# For Windows
 
-Clarion 11.0.13505
+# Clarion 11.0.13505
 
 
-3rd Party
+# 3rd Party
 
 
 Capesoft 
