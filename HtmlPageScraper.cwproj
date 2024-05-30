@@ -1,0 +1,113 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{244DFA75-B549-4A1E-AF64-6A643DCEF24C}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Win32</Platform>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>HtmlPageScraper</RootNamespace>
+    <AssemblyName>HtmlPageScraper</AssemblyName>
+    <OutputName>HtmlPageScraper</OutputName>
+    <CWOutputType>Exe</CWOutputType>
+    <DefineConstants>_NT10_=&gt;1%3b_NT11_=&gt;1%3b_NT12_=&gt;1%3b_NT_=&gt;1%3bNETTALKLOG=&gt;0%3bStringTheoryLinkMode=&gt;1%3bStringTheoryDllMode=&gt;0%3bMD5=&gt;0%3bjFilesLinkMode=&gt;1%3bjFilesDllMode=&gt;0%3b_JFILES_=&gt;1%3bReflectionLM=&gt;1%3bReflectionDM=&gt;0%3bWinEventLinkMode=&gt;1%3bWinEventDLLMode=&gt;0%3b_RASLinkMode_=&gt;1%3b_RASDllMode_=&gt;0%3bFM2=&gt;1%3bGPFReporterLinkMode=&gt;1%3bGPFReporterDllMode=&gt;0%3bHyperLM=&gt;1%3bHyperDM=&gt;0%3b_NoCSMesBox_=&gt;0%3b_MSGThreadSafe_=&gt;1%3b_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1%3b_NetTalkDllMode_=&gt;0%3b_NetTalkLinkMode_=&gt;1</DefineConstants>
+    <stack_size>16384</stack_size>
+    <CopyCore>True</CopyCore>
+    <Model>Dll</Model>
+    <ApplicationIcon>AppIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <vid>full</vid>
+    <check_stack>True</check_stack>
+    <check_index>True</check_index>
+    <warnings>on</warnings>
+    <GenerateMap>True</GenerateMap>
+    <line_numbers>True</line_numbers>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <vid>off</vid>
+    <check_stack>False</check_stack>
+    <check_index>False</check_index>
+  </PropertyGroup>
+  <ItemGroup>
+    <Library Include="CLAFM3.lib" />
+    <Library Include="clanet.lib" />
+    <Library Include="hand2.cur" />
+    <Library Include="HtmlPageScraper.EXE.manifest" />
+    <Library Include="HtmlPageScraper.Version" />
+    <Library Include="smalltik.ico" />
+    <Compile Include="HtmlPageScraper.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="HtmlPageScraper001.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="HtmlPageScraper002.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="HtmlPageScraper003.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="HtmlPageScraper005.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="HtmlPageScraper006.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="HtmlPageScraper007.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="HTMLPAGESCRAPER_BC.CLW">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="HtmlPageScraper_BC0.CLW">
+      <Generated>true</Generated>
+    </Compile>
+    <FileDriver Include="ASCII" />
+    <FileDriver Include="DOS" />
+    <FileDriver Include="TOPSPEED" />
+    <None Include="caroot.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="clafm3.Dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="dh2048.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="ecec.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="libcrypto-3.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="libssl-3.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="OpenSSL.Exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="zlibwapi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+  </ItemGroup>
+  <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
+</Project>
