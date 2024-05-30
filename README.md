@@ -3,6 +3,10 @@
 
 ## For Windows
 
+## Installer
+
+[Download Installer](https://raw.githubusercontent.com/donridley1972/HtmlPageScraper/main/Installer/HtmlPageScraperInstaller.exe)
+
 ## Clarion 11.0.13505
 
 
