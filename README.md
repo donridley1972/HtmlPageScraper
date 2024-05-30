@@ -31,6 +31,4 @@ Capesoft
 
 <img src="https://github.com/donridley1972/HtmlPageScraper/blob/main/Screenshots/Main1.png" width=800/>
 
-<img src="https://github.com/donridley1972/HtmlPageScraper/blob/main/Screenshots/Main2.png" width=800/>
-
 <img src="https://github.com/donridley1972/HtmlPageScraper/blob/main/Screenshots/UpdateProjects.png" width=800/>
