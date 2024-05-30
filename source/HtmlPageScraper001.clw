@@ -88,11 +88,6 @@ TempSt              StringTheory
 FileSt              StringTheory
 x                   Long
 y                   Long
-MyTrace             dwrTrace
-
-local                   CLASS
-RemoveSection           Procedure(StringTheory pSt,string pTag,long pExclusive) !,string
-                        End
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
@@ -196,11 +191,6 @@ ReturnValue          BYTE,AUTO
     ?ListProjects{PROP:LineHeight} = 25
     ?ListPageLinks{PROP:LineHeight} = 25
     ?ListFileLinks{PROP:LineHeight} = 25
-    MyTrace.Trace('')
-    MyTrace.Trace('Image Width = ' & ?IMAGE1{PROP:Width})
-    MyTrace.Trace('Image Height = ' & ?IMAGE1{PROP:Height})
-    MyTrace.Trace('')
-    MyTrace.Trace('')
   RETURN ReturnValue
 
 
@@ -259,7 +249,7 @@ Looped BYTE
       Window{PROP:Timer} = 5      
     OF ?StopBtn
       ThisWindow.Update()
-      MyTrace = -1
+      MyState = -1
       Window{PROP:Timer} = 0 
     END
     RETURN ReturnValue
@@ -287,31 +277,18 @@ Looped BYTE
     Of EVENT:Timer
         Case MyState
         Of MyState:Start
-            MyTrace.Trace('[Main][ThisWindow.TakeEvent][EVENT:Timer][MyState:Start]')
             FileNdx = 0
             MyState = 0
             Free(LinksQ)
-            !Window{PROP:Timer} = 0
             ThisWebClient.Fetch(Pro:MainUrl)
-        !Of MyState:Split
         Of MyState:GetPages
-            MyTrace.Trace('[Main][ThisWindow.TakeEvent][EVENT:Timer][MyState:GetPages]')
-  
             If Not Records(LinksQ)
                 MyState = MyState:ParsePage
             End
-  
             TempSt.SetValue(ThisWebClient.ThisPage.GetValue())
             TempSt.SplitBetween('href="','"',True,True)
             Loop x = 1 to TempSt.Records()
                 LneSt.SetValue(TempSt.GetLine(x))
-                !If Not LneSt.FindChars('http')
-                !    MenuSt.AppendA(Clip(Pro:MainUrl) & TempSt.GetLine(x),True,'<13,10>')
-                !    LneSt.SetValue(Clip(Pro:MainUrl) & TempSt.GetLine(x))
-                !ELSE
-                !    MenuSt.AppendA(TempSt.GetLine(x),True,'<13,10>')
-                !    LneSt.SetValue(TempSt.GetLine(x))
-                !End
                 If not LneSt.Instring('http') And not LneSt.Instring(Clip(Pro:MainUrl))
                     If LneSt.Slice(1,1) = '/'
                         LneSt.Prepend(Clip(Pro:MainUrl))
@@ -319,11 +296,10 @@ Looped BYTE
                         LneSt.Prepend(Clip(Pro:MainUrl) & '/')
                     End
                 End
-                !LneSt.Remove(LneSt.UrlParametersOnly(LneSt.GetValue()))
                 If LneSt.ExtensionOnly(LneSt.UrlFileOnly())
                     LinksQ.Link = LneSt.GetValue()
-                    LinksQ.FileName = FileSt.UrlFileOnly(LinksQ.Link) !LneSt.UrlFileOnly(LneSt.GetValue())
-                    LinksQ.FileExt = LneSt.ExtensionOnly(LinksQ.FileName)   !LneSt.ExtensionOnly(LneSt.UrlFileOnly(LneSt.GetValue()))   !
+                    LinksQ.FileName = FileSt.UrlFileOnly(LinksQ.Link) 
+                    LinksQ.FileExt = LneSt.ExtensionOnly(LinksQ.FileName)   
                     If LinksQ.FileExt
                         Get(LinksQ,LinksQ.Link)
                         If Errorcode()
@@ -341,8 +317,6 @@ Looped BYTE
                         End
                     End
                 End
-  
-  
             End
         Of MyState:GetPage
             MyState = MyState:WaitOnPage
@@ -351,35 +325,20 @@ Looped BYTE
                 MyState = 0
             End
             Get(PagesQ,1) 
-  
-            MyTrace.Trace('[Main][ThisWindow.TakeEvent][EVENT:Timer][MyState:GetPage]<9>PageLink[' & Clip(PagesQ.PageLink) & ']')
-  
             ThisWebClient.Fetch(PagesQ.PageLink)
         Of MyState:WaitOnPage
-            MyTrace.Trace('[Main][ThisWindow.TakeEvent][EVENT:Timer][MyState:WaitOnPage]')  
-  
         Of MyState:ParsePage
-            MyTrace.Trace('[Main][ThisWindow.TakeEvent][EVENT:Timer][MyState:ParsePage]') 
-  
             ThisWebClient.ThisPage.SetValue(FullPageSt.GetValue())
-  
             If Records(PagesQ)
                 MyState = MyState:GetPage
             ELSE
-                !Window{PROP:Timer} = 0
                 MyState = MyState:GetFile
             End
-            
             ThisWebClient.ThisPage.RemoveAttributes('li')
-            !self.ThisPage.FormatHTML()
             TempSt.SetValue(ThisWebClient.ThisPage.GetValue())
             TempSt.SplitBetween('src="','"',True,True)
             Loop x = 1 to TempSt.Records()
-                !SrcSt.AppendA(TempSt.GetLine(x),True,'<13,10>')
                 LneSt.SetValue(TempSt.GetLine(x))
-                !If not LneSt.Instring('http')
-                !    LneSt.Prepend('http:')
-                !End
                 If not LneSt.Instring('http') And not LneSt.Instring(Clip(Pro:MainUrl))
                     If LneSt.Slice(1,1) = '/'
                         LneSt.Prepend(Clip(Pro:MainUrl))
@@ -387,21 +346,12 @@ Looped BYTE
                         LneSt.Prepend(Clip(Pro:MainUrl) & '/')
                     End
                 End
-  
                 LinksQ.Link = LneSt.UrlProtocolOnly() & '://' & LneSt.UrlHostOnly() & '/' & LneSt.UrlPathOnly() !LneSt.GetValue() !TempSt.GetLine(x)
-  
                 FileSt.SetValue(LinksQ.Link,True)
-  
                 FileSt.Split('<32>')
-                !MyTrace.Trace('')
-                !Loop x = 1 to FileSt.Records()
-                !    MyTrace.Trace('<9>' & x & '<9>' & FileSt.GetLine(x))
-                !END
                 LinksQ.Link = FileSt.GetLine(1)
-  
                 LinksQ.FileName = FileSt.UrlFileOnly(LinksQ.Link) !LneSt.UrlFileOnly(LneSt.GetValue())
                 LinksQ.FileExt = LneSt.ExtensionOnly(LinksQ.FileName)   !LneSt.ExtensionOnly(LneSt.UrlFileOnly(LneSt.GetValue()))   !
-                !LneSt.U
                 If LinksQ.FileExt
                     Get(LinksQ,LinksQ.Link)
                     If Errorcode()
@@ -412,11 +362,7 @@ Looped BYTE
             TempSt.SetValue(ThisWebClient.ThisPage.GetValue())
             TempSt.SplitBetween('srcset="','"',True,True)
             Loop x = 1 to TempSt.Records()
-                !SrcSetSt.AppendA(TempSt.GetLine(x),True,'<13,10>')
                 LneSt.SetValue(TempSt.GetLine(x))
-                !If not LneSt.Instring('http')
-                !    LneSt.Prepend('http:')
-                !End
                 If not LneSt.Instring('http') And not LneSt.Instring(Clip(Pro:MainUrl))
                     If LneSt.Slice(1,1) = '/'
                         LneSt.Prepend(Clip(Pro:MainUrl))
@@ -424,20 +370,12 @@ Looped BYTE
                         LneSt.Prepend(Clip(Pro:MainUrl) & '/')
                     End
                 End
-  
                 LinksQ.Link = LneSt.UrlProtocolOnly() & '://' & LneSt.UrlHostOnly() & '/' & LneSt.UrlPathOnly() !LneSt.GetValue() !TempSt.GetLine(x)
-  
                 FileSt.SetValue(LinksQ.Link,True)
-  
                 FileSt.Split('<32>')
-                !MyTrace.Trace('')
-                !Loop x = 1 to FileSt.Records()
-                !    MyTrace.Trace('<9>' & x & '<9>' & FileSt.GetLine(x))
-                !END
                 LinksQ.Link = FileSt.GetLine(1)
                 LinksQ.FileName = FileSt.UrlFileOnly(LinksQ.Link) !LneSt.UrlFileOnly(LneSt.GetValue())
                 LinksQ.FileExt = LneSt.ExtensionOnly(LinksQ.FileName) !LneSt.ExtensionOnly(LneSt.UrlFileOnly(LneSt.GetValue()))   !
-  
                 If LinksQ.FileExt
                     Get(LinksQ,LinksQ.Link)
                     If Errorcode()
@@ -449,9 +387,6 @@ Looped BYTE
             If Records(LinksQ)
                 MyState = MyState:WaitOnFile
                 Get(LinksQ,1)
-                
-                MyTrace.Trace('[Main][ThisWindow.TakeEvent][EVENT:Timer][MyState:GetFile]<9>Link[' & Clip(LinksQ.Link) & ']')
-  
                 If LinksQ.FileExt
                     MyState = MyState:WaitOnFile
                     ThisWebClient.Fetch(LinksQ.Link)
@@ -464,13 +399,8 @@ Looped BYTE
                 Window{PROP:Timer} = 0
             End
         Of MyState:WaitOnFile
-            MyTrace.Trace('[Main][ThisWindow.TakeEvent][EVENT:Timer][MyState:WaitOnFile]') 
         End
     END
-  
-  !MyState             Long
-  !MyState:Start       Equate(1)  
-  
   If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
@@ -512,92 +442,6 @@ Looped BYTE
   ReturnValue = Level:Fatal
   RETURN ReturnValue
 
-local.RemoveSection           Procedure(StringTheory pSt,string pTag,long pExclusive)
-RemoveSt        StringTheory
-LneSt           StringTheory
-DelimiterSt     StringTheory
-WordSt          StringTheory
-StartPos        Long
-EndPos          Long
-DelimStartPos   Long
-DelimEndPos     Long
-Left_           String(10)
-Right           String(10)
-x               Long
-    code
-    RemoveSt.SetValue(pSt.GetValue())
-    DelimiterSt.SetValue(pTag,True)
-    StartPos = 1
-    MyTrace.Trace('')
-    LOOP
-        x+=1
-        StartPos = RemoveSt.WordStart(StartPos, 0, st:Forwards,'<32>')
-        if StartPos < 1 then break.
-        EndPos = RemoveSt.WordEnd(StartPos, 0, '<32>',True)
-
-        WordSt.SetValue(RemoveSt.Between('','',StartPos,EndPos,True,False))
-        WordSt.SetValue(WordSt.Left())
-        WordSt.Trim()
-
-        MyTrace.Trace(WordSt.GetValue())
-
-        LneSt.AppendA(WordSt.GetValue(),False,'<32>')
-
-        
-
-        If StartPos > DelimiterSt.Length()
-            If WordSt.FindChars(DelimiterSt.GetValue(),2) !WordSt.GetValue() = DelimiterSt.GetValue()
-                EndPos = LneSt.FindChars(DelimiterSt.GetValue(),2) + (DelimiterSt.Length())
-                LneSt.RemoveFromPosition(EndPos,(LneSt.Length()-EndPos)+1)
-                If pExclusive = 1
-                    DelimStartPos = (LneSt.Length()-DelimiterSt.Length()) + 1
-                    DelimEndPos = LneSt.Length()
-                    LneSt.RemoveFromPosition(DelimStartPos,(DelimEndPos-DelimStartPos)+1)
-                End
-                EndPos = (StartPos + LneSt.Length()) - 1
-                Break
-            End
-        End
-
-        if EndPos < StartPos or EndPos > RemoveSt.Length()
-            break
-        End
-        StartPos = EndPos + 1
-
-    End
-    MyTrace.Trace('')
-    !MyTrace.Trace(LneSt.GetValue())
-    !MyTrace.Trace('')
-    pSt.Remove(LneSt.GetValue())
-
-
-
-
-
-
-
-
-
-!    Left_ = clip(pTag) !'<' & clip(pTag) & '<32>'
-!    Right = clip(pTag) !'</' & clip(pTag) & '>'
-!    StartPos = RemoveSt.FindNth(Clip(Left_),1) !RemoveSt.FindChars(Clip(Left_))
-!    MyTrace.Trace('')
-!    loop     
-!        EndPos = RemoveSt.FindChars(Clip(Right),StartPos+1) !+ Size(Right)      
-!        LneSt.SetValue(RemoveSt.FindBetween(Clip(Left_), Clip(Right), StartPos, EndPos,True,False))     
-!        if StartPos = 0         
-!            break     
-!        else         
-!            ! do something with the returned betweenVal
-!            MyTrace.Trace(LneSt.GetValue())   
-!            !RemoveSt.Remove(LneSt.GetValue())  
-!        end   
-!        ! Reset pStart for next iteration. If not doing pExclusive then pStart = pEnd + 1
-!        StartPos = EndPos + 1 !len(pRight) + 1
-!    end
-!    MyTrace.Trace('')    
-!    pSt.SetValue(RemoveSt.GetValue())
-    !Return RemoveSt.GetValue()
 !----------------------------------------------------
 csResize.Fetch   PROCEDURE (STRING Sect,STRING Ent,*? Val)
   CODE
@@ -666,15 +510,8 @@ LinkSt      StringTheory
                 self.RemoveHeader()
                 self.ThisPage.SaveFile(Clip(Pro:SaveTo) & '\Pages\Index.html')
             Of MyState:WaitOnPage
-                !MyTrace.Trace('')
-                !MyTrace.Trace(self.ThisPage.GetValue())
-  
                 LinkSt.SetValue(PagesQ.PageLink,True)
                 LinkSt.Split('/')
-                !MyTrace.Trace('')
-                !Loop i = 1 to LinkSt.Records()
-                !    MyTrace.Trace('<9>' & i & '<9>' & LinkSt.GetLine(i))
-                !End
                 self.RemoveHeader()
                 If Pro:SaveTo
                     If Not EXISTS(Clip(Pro:SaveTo) & '\Pages')
@@ -684,9 +521,6 @@ LinkSt      StringTheory
                 ELSE
                     self.ThisPage.SaveFile('.\Extracted Files\Pages\' & LinkSt.GetLine(LinkSt.Records()) & '.html')
                 End
-  
-  
-                !MyState = MyState:GetPage
                 Delete(PagesQ)
                 If Records(PagesQ)
                     MyState = MyState:ParsePage
@@ -789,7 +623,6 @@ LinkSt      StringTheory
                             self.ThisPage.SaveFile(Clip(Pro:SaveTo) & '\Other\' & Clip(LinksQ.FileName))
                         End
                     End
-                    !self.ThisPage.SaveFile('.\Extracted Files\' & Clip(LinksQ.FileName))
                 ELSE
                     MyState = -1
                     Window{PROP:Timer} = 0

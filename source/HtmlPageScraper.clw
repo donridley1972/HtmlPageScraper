@@ -51,7 +51,6 @@ WinEvent:TemplateVersion      equate('5.41')
   include('ResizeAndSplit.Inc'),ONCE
   include('csGPF.Inc'),ONCE
    include('Hyper.Inc'),ONCE
-    Include('dwrTrace.inc'),ONCE
     Include('WinEvent.Inc'),Once
 
    MAP
